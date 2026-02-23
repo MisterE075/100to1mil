@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>@100.2.1mil — $0 to $1,000,000</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #0b0e17;
+    --panel:    #131929;
+    --panel2:   #1a2236;
+    --border:   #1e2d45;
+    --border2:  #243350;
+    --green:    #00c076;
+    --green-bg: rgba(0,192,118,0.08);
+    --red:      #f6465d;
+    --red-bg:   rgba(246,70,93,0.08);
+    --yellow:   #f0b90b;
+    --yellow-bg:rgba(240,185,11,0.1);
+    --white:    #eaecef;
+    --gray1:    #848e9c;
+    --gray2:    #474d57;
+    --gray3:    #2b3244;
+    --font:     'Inter', sans-serif;
+    --mono:     'Share Tech Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    font-family: var(--font);
+    color: var(--white);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── TICKER ── */
+  .ticker-wrap {
+    width: 100%;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: stretch;
+  }
+
+  .ticker-label {
+    background: var(--green);
+    color: #000;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 0 12px;
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .ticker-scroll { overflow: hidden; flex: 1; padding: 7px 0; }
+
+  .ticker-inner {
+    display: flex;
+    animation: ticker 35s linear infinite;
+    white-space: nowrap;
+  }
+
+  .tick-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 20px;
+    border-right: 1px solid var(--border);
+    font-size: 11px;
+    font-family: var(--mono);
+  }
+
+  .tick-sym { color: var(--white); font-weight: 600; }
+  .tick-price { color: var(--gray1); }
+  .tick-up { color: var(--green); }
+  .tick-down { color: var(--red); }
+
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ── LAYOUT ── */
+  .page {
+    width: 100%;
+    max-width: 480px;
+    padding: 14px 12px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .card-title {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: var(--gray1);
+    text-transform: uppercase;
+  }
+
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 9px;
+    color: var(--gray1);
+    font-family: var(--mono);
+  }
+
+  .live-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: blink 2s ease-in-out infinite;
+  }
+
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+  /* ── PROFILE ── */
+  .profile-wrap { padding: 18px 16px 0; }
+
+  .profile-top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .avatar {
+    width: 56px; height: 56px;
+    border-radius: 8px;
+    background: var(--panel2);
+    border: 1px solid var(--border2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+
+  .handle {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--white);
+    letter-spacing: -0.5px;
+  }
+
+  .handle span { color: var(--green); }
+
+  .profile-loc {
+    font-size: 11px;
+    color: var(--gray1);
+    margin-top: 3px;
+  }
+
+  .profile-tags {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+
+  .tag {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--panel2);
+    border: 1px solid var(--border2);
+    color: var(--gray1);
+    text-transform: uppercase;
+  }
+
+  /* ── DAY COUNTER ── */
+  .day-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    border-top: 1px solid var(--border);
+    margin-top: 14px;
+    background: var(--panel2);
+  }
+
+  .day-num {
+    font-size: 40px;
+    font-weight: 800;
+    color: var(--yellow);
+    line-height: 1;
+    font-family: var(--mono);
+    flex-shrink: 0;
+  }
+
+  .day-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  .day-sub {
+    font-size: 10px;
+    color: var(--gray1);
+    margin-top: 3px;
+  }
+
+  .day-live {
+    font-size: 10px;
+    color: var(--green);
+    margin-top: 3px;
+  }
+
+  /* ── PORTFOLIO VALUE ── */
+  .port-wrap {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 16px 16px 0;
+  }
+
+  .port-label {
+    font-size: 10px;
+    color: var(--gray1);
+    font-weight: 500;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .port-value {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--white);
+    font-family: var(--mono);
+    line-height: 1;
+  }
+
+  .port-pnl {
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 5px;
+  }
+
+  .port-right { text-align: right; }
+
+  .port-goal-label {
+    font-size: 10px;
+    color: var(--gray1);
+    margin-bottom: 4px;
+  }
+
+  .port-goal {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gray1);
+    font-family: var(--mono);
+  }
+
+  .port-pct {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--yellow);
+    margin-top: 4px;
+  }
+
+  /* ── PROGRESS ── */
+  .prog-wrap { padding: 14px 16px 16px; }
+
+  .prog-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    color: var(--gray1);
+    margin-bottom: 8px;
+    font-family: var(--mono);
+  }
+
+  .prog-track {
+    width: 100%;
+    height: 6px;
+    background: var(--gray3);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .prog-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #00a86b, var(--green));
+    border-radius: 3px;
+    transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .milestones {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+  }
+
+  .ms {
+    font-size: 8px;
+    color: var(--gray2);
+    font-family: var(--mono);
+  }
+
+  .ms.hit { color: var(--green); }
+
+  /* ── STATS GRID ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .stat {
+    padding: 14px 10px;
+    text-align: center;
+    border-right: 1px solid var(--border);
+  }
+
+  .stat:last-child { border-right: none; }
+
+  .stat-val {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--white);
+    font-family: var(--mono);
+  }
+
+  .stat-lbl {
+    font-size: 9px;
+    color: var(--gray1);
+    margin-top: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── POSITIONS ── */
+  .pos-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+    gap: 8px;
+  }
+
+  .pos-row:last-child { border-bottom: none; }
+  .pos-row:hover { background: rgba(255,255,255,0.02); }
+
+  .pos-sym {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--white);
+    font-family: var(--mono);
+  }
+
+  .pos-name {
+    font-size: 10px;
+    color: var(--gray1);
+    margin-top: 2px;
+    font-weight: 400;
+  }
+
+  .pos-price {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+    text-align: right;
+    font-family: var(--mono);
+    padding-right: 12px;
+  }
+
+  .pos-sub {
+    font-size: 10px;
+    color: var(--gray1);
+    text-align: right;
+    margin-top: 2px;
+    font-family: var(--mono);
+  }
+
+  .pos-chg {
+    font-size: 13px;
+    font-weight: 600;
+    text-align: right;
+    font-family: var(--mono);
+    min-width: 65px;
+  }
+
+  .pos-chg-sub {
+    font-size: 10px;
+    text-align: right;
+    margin-top: 2px;
+    font-family: var(--mono);
+  }
+
+  .green { color: var(--green); }
+  .red   { color: var(--red); }
+  .muted { color: var(--gray1); }
+
+  /* ── LINKS ── */
+  .section-label {
+    padding: 8px 16px;
+    background: var(--panel2);
+    border-bottom: 1px solid var(--border);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--gray1);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .link-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    transition: background 0.15s;
+    position: relative;
+  }
+
+  .link-item:last-child { border-bottom: none; }
+  .link-item:hover { background: rgba(255,255,255,0.03); }
+
+  .link-item::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .link-item:hover::before { opacity: 1; }
+  .lc-green::before  { background: var(--green); }
+  .lc-pink::before   { background: #ff6ca8; }
+  .lc-orange::before { background: #f0813a; }
+  .lc-yellow::before { background: var(--yellow); }
+
+  .link-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: var(--panel2);
+    border: 1px solid var(--border2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .link-body { flex: 1; }
+
+  .link-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  .link-desc {
+    font-size: 10px;
+    color: var(--gray1);
+    margin-top: 2px;
+  }
+
+  .link-pill {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    letter-spacing: 0.5px;
+  }
+
+  .pill-green  { background: var(--green-bg);  color: var(--green); border: 1px solid rgba(0,192,118,0.3); }
+  .pill-pink   { background: rgba(255,106,168,0.1); color: #ff6ca8; border: 1px solid rgba(255,106,168,0.3); }
+  .pill-orange { background: rgba(240,129,58,0.1);  color: #f0813a; border: 1px solid rgba(240,129,58,0.3); }
+  .pill-yellow { background: var(--yellow-bg); color: var(--yellow); border: 1px solid rgba(240,185,11,0.3); }
+
+  .link-arrow {
+    font-size: 16px;
+    color: var(--gray2);
+    transition: color 0.15s, transform 0.15s;
+    margin-left: 4px;
+  }
+
+  .link-item:hover .link-arrow { color: var(--white); transform: translateX(2px); }
+
+  /* ── FOOTER ── */
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-top: 1px solid var(--border);
+    background: var(--panel2);
+    font-size: 9px;
+    color: var(--gray1);
+    letter-spacing: 0.5px;
+  }
+
+  .footer-brand {
+    font-weight: 700;
+    color: var(--green);
+    font-family: var(--mono);
+    font-size: 9px;
+  }
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-label">LIVE</div>
+  <div class="ticker-scroll">
+    <div class="ticker-inner" id="tickerInner">
+      <div class="tick-item"><span class="tick-sym">LOADING</span><span class="tick-price">—</span><span class="tick-up">FETCHING PRICES...</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- PROFILE CARD -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Account Overview</span>
+      <div class="live-badge">
+        <div class="live-dot"></div>
+        <span id="lastUpdated">connecting...</span>
+      </div>
+    </div>
+
+    <div class="profile-wrap">
+      <div class="profile-top">
+        <div class="avatar">💰</div>
+        <div>
+          <div class="handle"><span>@</span>100.2.1mil</div>
+
+          <div class="profile-tags">
+            <span class="tag">Roth IRA</span>
+            <span class="tag">Auto Detailing</span>
+            <span class="tag">Ceramic Coating</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAY COUNTER -->
+    <div class="day-row">
+      <div class="day-num" id="dayCount">--</div>
+      <div>
+        <div class="day-label">Days Into The Journey</div>
+        <div class="day-sub">📅 Started January 16, 2026</div>
+        <div class="day-live">⚡ Prices auto-update every 30s</div>
+      </div>
+    </div>
+
+    <!-- PORTFOLIO VALUE -->
+    <div class="port-wrap">
+      <div>
+        <div class="port-label">Portfolio Value</div>
+        <div class="port-value" id="portValue">$—</div>
+        <div class="port-pnl" id="portPnl" style="color:var(--gray1)">Calculating...</div>
+      </div>
+      <div class="port-right">
+        <div class="port-goal-label">Target</div>
+        <div class="port-goal">$1,000,000</div>
+        <div class="port-pct" id="portPct">— % Complete</div>
+      </div>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="prog-wrap">
+      <div class="prog-meta">
+        <span>$0 Start</span>
+        <span id="progNow" style="color:var(--yellow)">Loading...</span>
+        <span>$1M 🎯</span>
+      </div>
+      <div class="prog-track">
+        <div class="prog-fill" id="progFill"></div>
+      </div>
+      <div class="milestones">
+        <span class="ms hit">$0</span>
+        <span class="ms">$10K</span>
+        <span class="ms">$50K</span>
+        <span class="ms">$100K</span>
+        <span class="ms">$500K</span>
+        <span class="ms">$1M</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- METRICS -->
+  <div class="card">
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="stat-val">6</div>
+        <div class="stat-lbl">Positions</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">3</div>
+        <div class="stat-lbl">Income</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val" id="statToGo">$998K</div>
+        <div class="stat-lbl">To Goal</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val" id="statPct" style="color:var(--yellow)">0.20%</div>
+        <div class="stat-lbl">Complete</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POSITIONS -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Open Positions</span>
+      <div class="live-badge"><div class="live-dot"></div><span>Live</span></div>
+    </div>
+    <div id="posTable">
+      <div style="padding:20px;text-align:center;font-size:11px;color:var(--gray1)">Fetching live prices...</div>
+    </div>
+  </div>
+
+  <!-- LINKS -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Quick Access</span>
+    </div>
+
+    <div class="section-label">💰 Investing</div>
+
+    <a href="https://a.webull.com/3DbJAQvKhUGMpu2VG9" target="_blank" class="link-item lc-green">
+      <div class="link-icon">📈</div>
+      <div class="link-body">
+        <div class="link-name">Start Investing — Webull</div>
+        <div class="link-desc">Commission-free trading · Platform I use daily</div>
+      </div>
+      <div class="link-pill pill-green">FREE STOCKS</div>
+      <div class="link-arrow">›</div>
+    </a>
+
+    <a href="https://link.blossomsocial.com/7uYa/vu7bwtuw" target="_blank" class="link-item lc-pink">
+      <div class="link-icon">🌼</div>
+      <div class="link-body">
+        <div class="link-name">Follow My Portfolio — Blossom</div>
+        <div class="link-desc">Real verified trades · Code: 343896 · Get $5</div>
+      </div>
+      <div class="link-pill pill-pink">JOIN FREE</div>
+      <div class="link-arrow">›</div>
+    </a>
+
+    <a href="https://www.instagram.com/100.2.1mil" target="_blank" class="link-item lc-orange">
+      <div class="link-icon">📱</div>
+      <div class="link-body">
+        <div class="link-name">Instagram — @100.2.1mil</div>
+        <div class="link-desc">Daily updates · Education · $0 → $1M journey</div>
+      </div>
+      <div class="link-pill pill-orange">FOLLOW</div>
+      <div class="link-arrow">›</div>
+    </a>
+
+    <div class="section-label">🚗 The Auto Detailing Academy</div>
+
+    <a href="https://www.instagram.com/theautodetailingacademy" target="_blank" class="link-item lc-orange">
+      <div class="link-icon">📱</div>
+      <div class="link-body">
+        <div class="link-name">Instagram — @theautodetailingacademy</div>
+        <div class="link-desc">Tips · Education · Start your detailing business</div>
+      </div>
+      <div class="link-pill pill-orange">FOLLOW</div>
+      <div class="link-arrow">›</div>
+    </a>
+
+    <a href="#" class="link-item lc-yellow">
+      <div class="link-icon">🎓</div>
+      <div class="link-body">
+        <div class="link-name">Detailing Academy — Courses</div>
+        <div class="link-desc">Learn detailing · Start your biz · Coming soon 🔥</div>
+      </div>
+      <div class="link-pill pill-yellow">COMING SOON</div>
+      <div class="link-arrow">›</div>
+    </a>
+
+    <div class="card-footer">
+      <span>Documenting every dollar in real time</span>
+      <span class="footer-brand">$0 → $1M 🦁</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const API_KEY = 'd6e3ql9r01qmepi1m9hgd6e3ql9r01qmepi1m9i0';
+  const GOAL    = 1_000_000;
+
+  const HOLDINGS = [
+    { sym:'COPX', name:'Global X Copper Miners ETF',    shares:2.10972 },
+    { sym:'VOO',  name:'Vanguard S&P 500 ETF',          shares:1.27948 },
+    { sym:'VGT',  name:'Vanguard Info Technology ETF',   shares:0.48366 },
+    { sym:'VXUS', name:'Vanguard Total Intl Stock ETF',  shares:5.13308 },
+    { sym:'DNLI', name:'Denali Therapeutics',            shares:6       },
+    { sym:'KOD',  name:'Kodiak Sciences',               shares:3.74015 },
+  ];
+
+  // Day counter
+  const start = new Date('2026-01-16');
+  const msDay = 864e5;
+  document.getElementById('dayCount').textContent =
+    Math.max(1, Math.floor((Date.now() - start) / msDay) + 1);
+
+  function fmt(n, d=2) {
+    return n.toLocaleString('en-US', {minimumFractionDigits:d, maximumFractionDigits:d});
+  }
+
+  async function fetchQuote(sym) {
+    const r = await fetch(`https://finnhub.io/api/v1/quote?symbol=${sym}&token=${API_KEY}`);
+    const d = await r.json();
+    return { price:d.c, change:d.d, pct:d.dp, prev:d.pc };
+  }
+
+  async function refresh() {
+    let total = 0;
+    let totalPnl = 0;
+    const rows = [];
+
+    for (const h of HOLDINGS) {
+      try {
+        const q = await fetchQuote(h.sym);
+        const val = q.price * h.shares;
+        const dayPnl = (q.price - q.prev) * h.shares;
+        total += val;
+        totalPnl += dayPnl;
+        rows.push({ ...h, ...q, val, dayPnl });
+      } catch {
+        rows.push({ ...h, price:null, pct:null, val:0, dayPnl:0 });
+      }
+    }
+
+    renderPositions(rows);
+    renderPortfolio(total, totalPnl);
+    renderTicker(rows, total);
+    document.getElementById('lastUpdated').textContent =
+      new Date().toLocaleTimeString('en-US', {hour:'2-digit',minute:'2-digit'});
+  }
+
+  function renderPositions(rows) {
+    document.getElementById('posTable').innerHTML = rows.map(r => {
+      const up   = r.pct >= 0;
+      const cls  = r.price ? (up ? 'green' : 'red') : 'muted';
+      const price = r.price ? `$${fmt(r.price)}` : '—';
+      const val   = r.price ? `$${fmt(r.val)}` : '—';
+      const pct   = r.pct  != null ? `${up?'+':''}${fmt(r.pct)}%` : '—';
+      const chg   = r.change != null ? `${up?'+':''}$${fmt(Math.abs(r.change))}` : '';
+      const arrow = r.pct != null ? (up ? '▲' : '▼') : '';
+      return `
+      <div class="pos-row">
+        <div>
+          <div class="pos-sym">${r.sym}</div>
+          <div class="pos-name">${r.name}</div>
+        </div>
+        <div>
+          <div class="pos-price">${price}</div>
+          <div class="pos-sub">${val}</div>
+        </div>
+        <div>
+          <div class="pos-chg ${cls}">${arrow} ${pct}</div>
+          <div class="pos-chg-sub ${cls}">${chg}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function renderPortfolio(total, pnl) {
+    const pct  = (total / GOAL) * 100;
+    const toGo = GOAL - total;
+
+    document.getElementById('portValue').textContent = `$${fmt(total)}`;
+    const pnlEl = document.getElementById('portPnl');
+    pnlEl.textContent = pnl >= 0
+      ? `▲ Today +$${fmt(Math.abs(pnl))} 🔥`
+      : `▼ Today -$${fmt(Math.abs(pnl))}`;
+    pnlEl.style.color = pnl >= 0 ? 'var(--green)' : 'var(--red)';
+
+    document.getElementById('progFill').style.width = `${Math.min(pct, 100)}%`;
+    document.getElementById('progNow').textContent  = `▲ $${fmt(total)} now`;
+    document.getElementById('portPct').textContent  = `${pct.toFixed(4)}% Complete`;
+
+    // stats
+    const toGoStr = toGo >= 1e6
+      ? `$${fmt(toGo/1e6,2)}M`
+      : toGo >= 1e3
+        ? `$${fmt(toGo/1e3,1)}K`
+        : `$${fmt(toGo,0)}`;
+    document.getElementById('statToGo').textContent = toGoStr;
+    document.getElementById('statPct').textContent  = `${pct.toFixed(2)}%`;
+  }
+
+  function renderTicker(rows, total) {
+    const items = [
+      ...rows.map(r => {
+        if (!r.price) return `<div class="tick-item"><span class="tick-sym">${r.sym}</span><span class="tick-price">—</span></div>`;
+        const up  = r.pct >= 0;
+        const cls = up ? 'tick-up' : 'tick-down';
+        const arr = up ? '▲' : '▼';
+        return `<div class="tick-item">
+          <span class="tick-sym">${r.sym}</span>
+          <span class="tick-price">$${fmt(r.price)}</span>
+          <span class="${cls}">${arr} ${up?'+':''}${fmt(r.pct)}%</span>
+        </div>`;
+      }),
+      `<div class="tick-item">
+        <span class="tick-sym">PORTFOLIO</span>
+        <span class="tick-price">$${fmt(total)}</span>
+        <span class="tick-up">→ $1M 🎯</span>
+      </div>`
+    ];
+    // duplicate for seamless loop
+    const html = [...items,...items].join('');
+    document.getElementById('tickerInner').innerHTML = html;
+  }
+
+  // initial load + refresh every 30s
+  refresh();
+  setInterval(refresh, 30000);
+</script>
+</body>
+</html>
