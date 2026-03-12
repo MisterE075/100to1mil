@@ -363,7 +363,7 @@
   /* ── POSITIONS ── */
   .pos-row {
     display: grid;
-    grid-template-columns: 1fr auto auto;
+    grid-template-columns: 1fr auto auto auto;
     align-items: center;
     padding: 12px 16px;
     border-bottom: 1px solid var(--border);
@@ -749,6 +749,12 @@
       <span class="card-title">Open Positions</span>
       <div class="live-badge"><div class="live-dot"></div><span>Live</span></div>
     </div>
+    <div style="display:grid;grid-template-columns:1fr auto auto auto;padding:6px 16px;border-bottom:1px solid var(--border)">
+      <div style="font-size:9px;color:var(--gray1);text-transform:uppercase;letter-spacing:0.5px">Symbol</div>
+      <div style="font-size:9px;color:var(--gray1);text-transform:uppercase;letter-spacing:0.5px;text-align:right;padding-right:12px">Price / Val</div>
+      <div style="font-size:9px;color:var(--gray1);text-transform:uppercase;letter-spacing:0.5px;text-align:right;padding-right:8px">Open P&L</div>
+      <div style="font-size:9px;color:var(--gray1);text-transform:uppercase;letter-spacing:0.5px;text-align:right">Day P&L</div>
+    </div>
     <div id="posTable">
       <div style="padding:20px;text-align:center;font-size:11px;color:var(--gray1)">Fetching live prices...</div>
     </div>
@@ -912,15 +918,15 @@
   renderHustles();
 
   const HOLDINGS = [
-    { sym:'TCMD', name:'Tactile Systems Technology',    shares:4.57895 },
-    { sym:'AMZN', name:'Amazon.com Inc',                shares:1       },
-    { sym:'SOUN', name:'SoundHound AI Inc',             shares:18.2125 },
-    { sym:'KOD',  name:'Kodiak Sciences Inc',           shares:3.74015 },
-    { sym:'DNLI', name:'Denali Therapeutics',           shares:6       },
-    { sym:'VXUS', name:'Vanguard Total Intl Stock ETF', shares:1       },
-    { sym:'COPX', name:'Global X Copper Miners ETF',   shares:0.00009 },
-    { sym:'VGT',  name:'Vanguard Info Technology ETF',  shares:0.48366 },
-    { sym:'VOO',  name:'Vanguard S&P 500 ETF',          shares:1.5328  },
+    { sym:'TCMD', name:'Tactile Systems Technology',    shares:4.57895,  avgCost:27.30  },
+    { sym:'AMZN', name:'Amazon.com Inc',                shares:1,        avgCost:214.66 },
+    { sym:'SOUN', name:'SoundHound AI Inc',             shares:18.2125,  avgCost:8.24   },
+    { sym:'KOD',  name:'Kodiak Sciences Inc',           shares:3.74015,  avgCost:24.06  },
+    { sym:'DNLI', name:'Denali Therapeutics',           shares:6,        avgCost:21.33  },
+    { sym:'VXUS', name:'Vanguard Total Intl Stock ETF', shares:1,        avgCost:80.26  },
+    { sym:'COPX', name:'Global X Copper Miners ETF',   shares:0.00009,  avgCost:86.84  },
+    { sym:'VGT',  name:'Vanguard Info Technology ETF',  shares:0.48366,  avgCost:693.98 },
+    { sym:'VOO',  name:'Vanguard S&P 500 ETF',          shares:1.5328,   avgCost:610.39 },
   ];
 
   // Day counter
@@ -973,6 +979,16 @@
       const pct   = r.pct  != null ? `${up?'+':''}${fmt(r.pct)}%` : '—';
       const chg   = r.change != null ? `${up?'+':''}$${fmt(Math.abs(r.change))}` : '';
       const arrow = r.pct != null ? (up ? '▲' : '▼') : '';
+
+      // Open P&L
+      const openPnl = r.price != null ? (r.price - r.avgCost) * r.shares : null;
+      const openPnlPct = r.price != null ? ((r.price - r.avgCost) / r.avgCost) * 100 : null;
+      const openUp = openPnl != null && openPnl >= 0;
+      const openCls = openPnl != null ? (openUp ? 'green' : 'red') : 'muted';
+      const openArrow = openPnl != null ? (openUp ? '▲' : '▼') : '';
+      const openPnlStr = openPnl != null ? `${openUp?'+':''}$${fmt(Math.abs(openPnl))}` : '—';
+      const openPctStr = openPnlPct != null ? `${openUp?'+':''}${fmt(openPnlPct)}%` : '—';
+
       return `
       <div class="pos-row">
         <div>
@@ -982,6 +998,10 @@
         <div>
           <div class="pos-price">${price}</div>
           <div class="pos-sub">${val}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="pos-chg ${openCls}">${openArrow} ${openPnlStr}</div>
+          <div class="pos-chg-sub ${openCls}">${openPctStr}</div>
         </div>
         <div>
           <div class="pos-chg ${cls}">${arrow} ${pct}</div>
